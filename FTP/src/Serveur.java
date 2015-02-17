@@ -29,7 +29,7 @@ public class Serveur {
 		while(true)
 		{
 			System.out.println("Waiting for Connection ...");
-			ThreadClient t=new ThreadClient(this.soc.accept(),this.getUser());
+			ThreadServeur t=new ThreadServeur(this.soc.accept(),this.getUser());
 			t.start();
 		}
 		

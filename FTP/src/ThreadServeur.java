@@ -8,7 +8,7 @@ import java.net.Socket;
 import java.util.Map;
 
 
-public class ThreadClient extends Thread {
+public class ThreadServeur extends Thread {
 
 	Socket ClientSoc;
 	DataInputStream din;
@@ -16,7 +16,7 @@ public class ThreadClient extends Thread {
 	Map<String,String> users;
 
 
-	public ThreadClient(Socket soc,Map<String,String> users)
+	public ThreadServeur(Socket soc,Map<String,String> users)
 	{
 		this.users=users;
 

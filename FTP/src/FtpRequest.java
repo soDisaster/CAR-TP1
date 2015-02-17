@@ -172,8 +172,22 @@ public class FtpRequest {
 	}
 
 
-	public void processLIST(Socket s, String st){
-
+	public void processLIST(Socket s, String file){
+		
+		File repertoire = new File(file);
+		try {
+			DataOutputStream dout = new DataOutputStream(s.getOutputStream());
+			String [] listefichiers;
+			String s1 = "";
+			listefichiers=repertoire.list();
+			for(int i=0;i<listefichiers.length;i++){
+				s1 += listefichiers[i];
+			}
+			dout.write((s1.getBytes()));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 

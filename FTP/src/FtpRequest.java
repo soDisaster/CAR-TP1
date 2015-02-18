@@ -23,6 +23,10 @@ import java.io.FileNotFoundException;
  * @author Thibault Rosa
  */
 
+/**
+ * Classe correspondant aux requêtes FTP
+ */
+
 public class FtpRequest {
 
 	private Map<String, String> users;
@@ -30,6 +34,10 @@ public class FtpRequest {
 	private int port;
 	private InetAddress ad;
 
+	
+	/**
+	 * Constructeurs
+	 */
 	public FtpRequest(Map<String, String> users){
 		this.users=users;
 	}
@@ -41,7 +49,7 @@ public class FtpRequest {
 	public void processUSER(Socket s, String user){
 		try {
 			DataOutputStream dout=new DataOutputStream(s.getOutputStream());
-
+			// Utilisateur reconnu. En attente du mot de passe.
 			dout.write(new String("331\n").getBytes());
 			this.user = user;
 
@@ -57,9 +65,11 @@ public class FtpRequest {
 		try {
 			DataOutputStream dout=new DataOutputStream(s.getOutputStream());
 			if(users.containsKey(user) && users.get(user).equals(pwd)){
+				/* User logged in, proceed. Logged out if appropriate. */
 				dout.write(new String("230\n").getBytes());
 			}
 			else {
+				/* Identifiant ou mot de passe incorrect*/
 				dout.write(new String("430\n").getBytes());
 			}
 		} catch (IOException e) {
@@ -73,6 +83,7 @@ public class FtpRequest {
 		try {
 			DataOutputStream dout=new DataOutputStream(s.getOutputStream());
 			// Sous Windows, on doit changer ce code.
+			// NAME system type. Where NAME is an official system name from the register
 			dout.write(new String("215\n").getBytes());
 		} catch (IOException e) {
 			System.out.println("Erreur d'envoi dans processSYST : "+ e);
@@ -83,21 +94,32 @@ public class FtpRequest {
 		String[] data = toc.split(",");
 		try {
 			DataOutputStream dout=new DataOutputStream(s.getOutputStream());
+			/* Apparait dans la console
+			 * Première partie adresse. 
+			 * Seconde partie port.
+			 */
 			ad = InetAddress.getByName(data[0] + "." + data[1] + "." + data[2] + "." + data[3]);
 			port = Integer.parseInt(data[4]) * 256 + Integer.parseInt(data[5]);
+			// Action demandée accomplie avec succès.
 			dout.write(new String("200\n").getBytes());
 		} catch (IOException e) {
 			System.out.println("Erreur d'envoi dans processPORT : "+ e);
 		}
 	}
 
-
+	/**
+	 * Utilisé pour prendre un fichier du répertoire distant et
+	 * le déposer dans le répertoire local
+	 * @param s socket
+	 * @param fichierdistant Le fichier que l'on souhaite récupérer
+	 */
 	public void processRETR(Socket s, String fichierdistant) {
 
 		try{
 			DataOutputStream dout=new DataOutputStream(s.getOutputStream());
-			/* On veut commencer */
+			/* File status okay; about to open data connection. */
 			dout.write(new String("150\n").getBytes());
+			/* Variable obtenues dans processPORT */
 			Socket socket = new Socket(ad, port);
 			DataOutputStream d = new DataOutputStream(socket.getOutputStream());
 
@@ -132,11 +154,16 @@ public class FtpRequest {
 	}
 
 
+	/**
+	 * Fichier répertoire local dans répertoire distant
+	 * @param s
+	 * @param file
+	 */
 	public void processSTOR(Socket s, String file){
 
 		try{
 			DataOutputStream dout=new DataOutputStream(s.getOutputStream());
-			/* On veut commencer */
+			/* File status okay; about to open data connection. */
 			dout.write(new String("150\n").getBytes());
 			Socket socket = new Socket(ad, port);
 			DataInputStream r = new DataInputStream(socket.getInputStream());
@@ -171,7 +198,11 @@ public class FtpRequest {
 		
 	}
 
-
+	/**
+	 * Permet à l'utilisateur de demander la liste de fichier
+	 * @param s
+	 * @param file
+	 */
 	public void processLIST(Socket s, String file){
 		
 		File repertoire = new File(file);
@@ -197,6 +228,7 @@ public class FtpRequest {
 		DataOutputStream dout;
 		try {
 			dout = new DataOutputStream(s.getOutputStream());
+			// Service closing control connection.
 			dout.write(new String("221\n").getBytes());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

@@ -131,6 +131,9 @@ public class FtpRequest {
 				while(br.read(buffer) > 0){
 					d.write(buffer);
 				}
+				
+				d.flush();
+				br.close();
 				/* Data connection open; no transfer in progress.*/
 				dout.write(new String("226\n").getBytes());
 			}catch(FileNotFoundException e){	
@@ -176,6 +179,7 @@ public class FtpRequest {
 				while(r.read(buffer)>0){
 					br.write(buffer);
 				}
+				br.close();
 				/* Data connection open; no transfer in progress.*/
 				dout.write(new String("226\n").getBytes());
 			}catch(FileNotFoundException e){	

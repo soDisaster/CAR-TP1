@@ -118,8 +118,6 @@ public class FtpRequest {
 			try{
 				FileInputStream br = new FileInputStream(new File("data/"+fichierdistant));
 
-				dout.write(new String("125\n").getBytes());
-
 				byte [] buffer = new byte[s.getReceiveBufferSize()];
 				int nbOfbyte;
 				while((nbOfbyte = br.read(buffer)) > 0){

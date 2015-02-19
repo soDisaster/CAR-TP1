@@ -1,3 +1,4 @@
+package serverPack;
 
 public interface Commande {
 	

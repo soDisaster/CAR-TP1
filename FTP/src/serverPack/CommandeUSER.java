@@ -1,3 +1,4 @@
+package serverPack;
 
 public class CommandeUSER implements Commande {
 	

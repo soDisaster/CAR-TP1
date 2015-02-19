@@ -2,7 +2,12 @@ package serveurPack;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+
 import org.junit.Test;
+
+import serverPack.Serveur;
+
 
 public class ServeurTest {
 
@@ -17,14 +22,14 @@ public class ServeurTest {
 	}
 
 	@Test
-	public void testInitUser() {
-		fail("Not yet implemented");
+	public void testInitUser() throws IOException {
+		Serveur serv= new Serveur();
+		serv.initUser();
+		serv.getUser();
+		assertTrue("LISTE non chargée",serv.getUser()!=null);
 	}
 
-	@Test
-	public void testGetUser() {
-		fail("Not yet implemented");
-	}
+	
 
 	@Test
 	public void testMain() {

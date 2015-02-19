@@ -25,6 +25,7 @@ public class Serveur {
 
 	private static int port = 9999;
 	private static String RootFTP;
+	private static boolean boucle;
 	
 	/** 
 	 * users contient le nom des utilisateurs et le mot de passe qui leur est associé.
@@ -38,6 +39,7 @@ public class Serveur {
 	 */
 	
 	public Serveur() throws IOException{
+		boucle=true;
 		this.users = new HashMap<String, String>();
 		this.initUser();
 		this.soc=new ServerSocket(port);
@@ -52,7 +54,7 @@ public class Serveur {
 	
 	public void loop() throws IOException{
 		
-		while(true)
+		while(boucle)
 		{
 			System.out.println("Waiting for Connection ...");
 			ThreadServeur t=new ThreadServeur(this.soc.accept(),this.getUser());
@@ -61,6 +63,10 @@ public class Serveur {
 		
 	}
 
+	public void stop() throws IOException{
+		boucle=false;
+		soc.close();
+	}
 	/**
 	 * Permet de mettre le contenu du fichier correspondant aux utilisateurs
 	 * et leur mots de passe dans la Map users

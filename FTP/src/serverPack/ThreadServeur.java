@@ -101,7 +101,7 @@ public class ThreadServeur extends Thread {
 						}
 					}
 				} catch (IOException e) {
-
+					command = null;
 					System.out.println("Erreur DataStream read in ThreadServeur : "+e);
 				}
 

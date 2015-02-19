@@ -2,23 +2,38 @@ package serveurPack;
 
 import static org.junit.Assert.*;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 public class FtpRequestTest {
 
-	@Test
-	public void testFtpRequest() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testProcessRequest() {
-		fail("Not yet implemented");
-	}
+	
+	Socket socket;
+	DataInputStream din;
+	DataOutputStream dout;
+	
+	
+	 @Before 
+	 public void initialize() throws IOException {
+		 
+		
+		 socket = new Socket(InetAddress.getByName("127.0.0.1"), 9999);
+		 dout=new DataOutputStream(socket.getOutputStream());
+		 din=new DataInputStream(socket.getInputStream());
+	      
+	    }
 
 	@Test
 	public void testProcessUSER() {
-		fail("Not yet implemented");
+		
+		
 	}
 
 	@Test
@@ -56,4 +71,12 @@ public class FtpRequestTest {
 		fail("Not yet implemented");
 	}
 
+	
+	@After 
+	public void finalize() throws IOException{
+
+		socket.close();
+		dout.close();
+		din.close();
+	}
 }

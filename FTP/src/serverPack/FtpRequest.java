@@ -34,9 +34,6 @@ public class FtpRequest {
 		this.users=users;
 	}
 
-	public void processRequest(){
-
-	}
 
 	public void processUSER(Socket s, String user){
 		try {
@@ -234,6 +231,8 @@ public class FtpRequest {
 			System.out.println("2");
 			d.close();
 			dout.write(new String("226\n").getBytes());
+			
+			socket.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

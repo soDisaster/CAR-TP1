@@ -93,7 +93,7 @@ public class FtpRequest {
 			ad = InetAddress.getByName(data[0] + "." + data[1] + "." + data[2] + "." + data[3]);
 			port = Integer.parseInt(data[4]) * 256 + Integer.parseInt(data[5]);
 			// Action demandée accomplie avec succès.
-			dout.write(new String("200\n").getBytes());
+			dout.write(new String("225\n").getBytes());
 		} catch (IOException e) {
 			System.out.println("Erreur d'envoi dans processPORT : "+ e);
 		}
@@ -118,10 +118,12 @@ public class FtpRequest {
 			try{
 				FileInputStream br = new FileInputStream(new File("data/"+fichierdistant));
 
+				dout.write(new String("125\n").getBytes());
 
 				byte [] buffer = new byte[s.getReceiveBufferSize()];
-				while(br.read(buffer) > 0){
-					d.write(buffer);
+				int nbOfbyte;
+				while((nbOfbyte = br.read(buffer)) > 0){
+					d.write(buffer,0,nbOfbyte);
 				}
 				
 				d.flush();
@@ -201,16 +203,38 @@ public class FtpRequest {
 	 */
 	public void processLIST(Socket s, String file){
 		
-		File repertoire = new File(file);
+		
+		File repertoire;
+		
+		if(file.length() > 0)
+		repertoire = new File("data/"+file);
+		else
+		repertoire = new File("data");
+		
+		
 		try {
-			DataOutputStream dout = new DataOutputStream(s.getOutputStream());
+			DataOutputStream dout=new DataOutputStream(s.getOutputStream());
+			/* File status okay; about to open data connection. */
+			dout.write(new String("150\n").getBytes());
+			Socket socket = new Socket(ad, port);
+			
+
+			DataOutputStream d = new DataOutputStream(socket.getOutputStream());
 			String [] listefichiers;
 			String s1 = "";
 			listefichiers=repertoire.list();
+			s1+="\r\n";
 			for(int i=0;i<listefichiers.length;i++){
-				s1 += listefichiers[i];
+				s1 += listefichiers[i] + "\r\n";
+				System.out.println(s1);
 			}
-			dout.write((s1.getBytes()));
+			s1+="\r\n";
+			d.write((s1.getBytes()));
+			System.out.println("1");
+			d.flush();
+			System.out.println("2");
+			d.close();
+			dout.write(new String("226\n").getBytes());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -234,5 +258,6 @@ public class FtpRequest {
 		
 
 	}
+
 
 }

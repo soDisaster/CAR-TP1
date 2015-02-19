@@ -28,7 +28,7 @@ public class ThreadServeur extends Thread {
 			dout=new DataOutputStream(ClientSoc.getOutputStream());
 
 		} catch (IOException e) {
-			System.out.println("Erreur DataStream constructeur ThreadClient : "+e);
+			System.out.println("Erreur DataStream constructeur ThreadServeur : "+e);
 		}
 
 		System.out.println("FTP Client Connected ...");
@@ -39,9 +39,12 @@ public class ThreadServeur extends Thread {
 
 	public String keyWord(String ligne){
 
+
 		String[] tab;
 		tab=ligne.split(" ");
 		return(tab[0]);
+
+
 
 
 	}
@@ -65,7 +68,7 @@ public class ThreadServeur extends Thread {
 		try {
 			dout.write(new String("220\n").getBytes());
 		} catch (IOException e) {
-			System.out.println("Erreur write run ThreadClient : "+e);
+			System.out.println("Erreur write run ThreadServeur : "+e);
 		}
 
 		Class<FtpRequest> c = FtpRequest.class; 
@@ -74,60 +77,59 @@ public class ThreadServeur extends Thread {
 			Constructor<FtpRequest> ct = c.getConstructor(Map.class);
 
 			Object t = ct.newInstance(this.users);
-
-			while(true)
+			String command ="";
+			while(command != null)
 			{
 
 				System.out.println("Waiting for Command ...");
-				String command;
+
 
 				try {
 					command = din.readLine();
 
-					System.out.println(command);
+					if(command !=null){
+						System.out.println(command);
 
-					String methodeName = "process"+keyWord(command);
-					System.out.println(methodeName);
-					Method m = c.getMethod(methodeName,Socket.class, String.class);
+						String methodeName = "process"+keyWord(command);
+						System.out.println(methodeName);
+						Method m = c.getMethod(methodeName,Socket.class, String.class);
 
-
-					if(m != null){
-						String arg = this.arg(command);
-						System.out.println(arg);
-						m.invoke(t,ClientSoc,arg);
+						if(m != null){
+							String arg = this.arg(command);
+							System.out.println(arg.length());
+							m.invoke(t,ClientSoc,arg);
+						}
 					}
-
 				} catch (IOException e) {
 
-					System.out.println("Erreur DataStream read in ThreadClient : "+e);
+					System.out.println("Erreur DataStream read in ThreadServeur : "+e);
 				}
 
 			}
 		} catch (InstantiationException e) {
 
-			System.out.println("Erreur instantiation de FtpRequest dans ThreadClient : "+e);
+			System.out.println("Erreur instantiation de FtpRequest dans ThreadServeur : "+e);
 
 		} catch (IllegalAccessException e) {
 
-			System.out.println("Erreur invocation de méthode, Illegal Access dans ThreadClient : "+e);
+			System.out.println("Erreur invocation de méthode, Illegal Access dans ThreadServeur : "+e);
 
 		} catch (SecurityException e) {
 
-			System.out.println("Erreur sécurité readLine deprecatred  dans ThreadClient : "+e);
+			System.out.println("Erreur sécurité readLine deprecatred  dans ThreadServeur : "+e);
 
 		} catch (NoSuchMethodException e) {
 
-			System.out.println("Erreur invocation de méthode dans ThreadClient : "+e);
+			System.out.println("Erreur invocation de méthode dans ThreadServeur : "+e);
 
 		} catch (IllegalArgumentException e) {
 
-			System.out.println("Erreur invocation de méthode, illegal arguement dans ThreadClient : "+e);
+			System.out.println("Erreur invocation de méthode, illegal arguement dans ThreadServeur : "+e);
 
-		} catch (InvocationTargetException e) {
-
-			System.out.println("Erreur invocation de méthode dans ThreadClient : "+e);
-
-		}
+		} catch (InvocationTargetException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} 
 	}
 }
 

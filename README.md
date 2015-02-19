@@ -15,16 +15,19 @@ Structure de notre projet
 
 
 
-FtpRequest.java contient toutes les méthodes process envoyées à l'utilisateur.
+FtpRequest.java 
 ---------------
+
+Contient toutes les méthodes process envoyées à l'utilisateur.
+
  
-processUSER
+#### processUSER
 
 Utilisateur reconnu, en attente du mot de passe.
 dout.write(new String("331\n").getBytes());
 
 
-processPASS
+#### processPASS
 
 Si le mot de passe correspond. L'utilisateur est connecté.
 
@@ -33,7 +36,7 @@ Utilisateur ou mot de passe eronné.
 dout.write(new String("430\n").getBytes());
 
 
-processLIST
+#### processLIST
 
 Liste les fichiers du dossier fichiersLIST
 
@@ -44,7 +47,7 @@ Ok
 dout.write(new String("226\n").getBytes());
 
 
-processRETR
+#### processRETR
 
 Utilisé pour prendre un fichier du répertoire distant et le déposer dans le répertoire local
 	
@@ -56,7 +59,7 @@ dout.write(new String("550\n").getBytes());
 
 
 
-processSTORE
+#### processSTORE
 
 Fichier répertoire local dans répertoire distant
 
@@ -67,12 +70,12 @@ Erreur fichier invalide...
 dout.write(new String("550\n").getBytes());
 
 
-processSYST
+#### processSYST
 
 NAME system type. Where NAME is an official system name from the register
 
 
-processPORT
+#### processPORT
 
 Utilisé pour ouvrir une connexion de transfert de fichiers.
 Utile pour STORE, RETR et LIST
@@ -85,13 +88,13 @@ Serveur.java
 
 
 
-Méthode loop : 
+#### Méthode loop : 
 
 Boucle infinie
 socket.accept() permet d'accepter les demandes de connexion.
 
 
-Méthode initUser()
+#### Méthode initUser()
 
 Lit le fichier users.txt et ajoute le contenu dans une Map
 
@@ -105,12 +108,12 @@ ThreadServeur.java
 
 Dans le constructeur on initialise un DataInputStream et DataOutputStream
 
-Méthode keyWord
+#### Méthode keyword
 
 Récupère par exemple USER dans le cas de USER saintomer
 
 
-Méthode arg
+#### Méthode arg
 
 Retourne argument de la commande si il existe
 

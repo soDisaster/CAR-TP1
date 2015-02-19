@@ -25,8 +25,8 @@ dout.write(new String("331\n").getBytes());
 
 processPASS
 
-Si le mot de passe correspond.
-L'utilisateur est connecté.
+Si le mot de passe correspond. L'utilisateur est connecté.
+
 dout.write(new String("230\n").getBytes());
 Utilisateur ou mot de passe eronné.
 dout.write(new String("430\n").getBytes());
@@ -100,7 +100,7 @@ Lit le fichier users.txt et ajoute le contenu dans une Map
 ThreadServeur.java
 
 
-Dans le constructeur on initialise un DatainputStream et DataOutputStream
+Dans le constructeur on initialise un DataInputStream et DataOutputStream
 
 Méthode keyWord
 
@@ -112,17 +112,14 @@ Méthode arg
 Retourne argument de la commande si il existe
 
 
-On créé une instance de FtpRequest. 
-Grâce à keyWord et arg on invoque (invoke()) la méthode correspondante présente dans FtpRequest.
+On créé une instance de FtpRequest grâce à keyWord et arg. On invoque (invoke()) la méthode correspondante présente dans FtpRequest.
  => Principe de réflexivité. 
 
 
 
 
 
-
-
-
+Autre.
 
 
 On utilise : 
@@ -131,6 +128,7 @@ ftp 127.0.0.1 9999
 
 car ftp localhost 9999 localhost => IPV6
 
+Cela posait problème pour le processLIST, envoyait une commande différente.
 
 
 

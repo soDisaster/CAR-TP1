@@ -5,7 +5,8 @@ Thibault Rosa
 Anne-Sophie Saint-Omer
 
 
-Structure de notre projet :
+Structure de notre projet
+-------------------------
 
 3 classes :
 - FtpRequest.java 
@@ -15,7 +16,7 @@ Structure de notre projet :
 
 
 FtpRequest.java contient toutes les méthodes process envoyées à l'utilisateur.
-
+---------------
  
 processUSER
 
@@ -80,6 +81,7 @@ Utile pour STORE, RETR et LIST
 
 
 Serveur.java 
+------------
 
 
 
@@ -98,6 +100,7 @@ Lit le fichier users.txt et ajoute le contenu dans une Map
 
 
 ThreadServeur.java
+-------------------
 
 
 Dans le constructeur on initialise un DataInputStream et DataOutputStream
@@ -119,7 +122,8 @@ On créé une instance de FtpRequest grâce à keyWord et arg. On invoque (invok
 
 
 
-Autre.
+Informations supplémentaires
+----------------------------
 
 
 On utilise : 

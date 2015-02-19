@@ -40,6 +40,7 @@ public class FtpRequest {
 			DataOutputStream dout=new DataOutputStream(s.getOutputStream());
 			// Utilisateur reconnu. En attente du mot de passe.
 			dout.write(new String("331\n").getBytes());
+			System.out.println("Ici");
 			this.user = user;
 
 

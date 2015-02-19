@@ -96,7 +96,6 @@ public class ThreadServeur extends Thread {
 
 						if(m != null){
 							String arg = this.arg(command);
-							System.out.println(arg.length());
 							m.invoke(t,ClientSoc,arg);
 						}
 					}

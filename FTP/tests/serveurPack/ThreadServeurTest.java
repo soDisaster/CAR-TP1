@@ -38,7 +38,6 @@ public class ThreadServeurTest {
 		
 		
 		
-		
 		String retourServ = din.readLine(); /*deprecated*/
 		System.out.println(retourServ);
 		

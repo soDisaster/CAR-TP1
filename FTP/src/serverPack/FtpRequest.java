@@ -170,8 +170,9 @@ public class FtpRequest {
 
 
 				byte [] buffer = new byte[s.getReceiveBufferSize()];
-				while(r.read(buffer)>0){
-					br.write(buffer);
+				int nbOfbyte;
+				while((nbOfbyte = r.read(buffer))>0){
+					br.write(buffer,0,nbOfbyte);
 				}
 				br.close();
 				/* Data connection open; no transfer in progress.*/

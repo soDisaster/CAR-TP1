@@ -25,13 +25,15 @@ public class FtpRequest {
 	private String user;
 	private int port;
 	private InetAddress ad;
+	private String currentLoc;
 
-	
+
 	/**
 	 * Constructeurs
 	 */
 	public FtpRequest(Map<String, String> users){
 		this.users=users;
+		this.currentLoc = "data";
 	}
 
 
@@ -74,7 +76,7 @@ public class FtpRequest {
 			DataOutputStream dout=new DataOutputStream(s.getOutputStream());
 			// Sous Windows, on doit changer ce code.
 			// NAME system type. Where NAME is an official system name from the register
-			dout.write(new String("215\n").getBytes());
+			dout.write(new String("215 UNIX\n").getBytes());
 		} catch (IOException e) {
 			System.out.println("Erreur d'envoi dans processSYST : "+ e);
 		}
@@ -121,7 +123,7 @@ public class FtpRequest {
 				while((nbOfbyte = br.read(buffer)) > 0){
 					d.write(buffer,0,nbOfbyte);
 				}
-				
+
 				d.flush();
 				br.close();
 				/* Data connection open; no transfer in progress.*/
@@ -190,7 +192,7 @@ public class FtpRequest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	/**
@@ -199,22 +201,22 @@ public class FtpRequest {
 	 * @param file
 	 */
 	public void processLIST(Socket s, String file){
-		
-		
+
+
 		File repertoire;
-		
+
 		if(file.length() > 0)
-		repertoire = new File("data/"+file);
+			repertoire = new File(this.currentLoc+"/"+file);
 		else
-		repertoire = new File("data");
-		
-		
+			repertoire = new File(this.currentLoc);
+
+
 		try {
 			DataOutputStream dout=new DataOutputStream(s.getOutputStream());
 			/* File status okay; about to open data connection. */
 			dout.write(new String("150\n").getBytes());
 			Socket socket = new Socket(ad, port);
-			
+
 
 			DataOutputStream d = new DataOutputStream(socket.getOutputStream());
 			String [] listefichiers;
@@ -232,7 +234,7 @@ public class FtpRequest {
 			System.out.println("2");
 			d.close();
 			dout.write(new String("226\n").getBytes());
-			
+
 			socket.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -242,7 +244,7 @@ public class FtpRequest {
 
 
 	public void processQUIT(Socket s,String st){
-		
+
 
 		DataOutputStream dout;
 		try {
@@ -253,10 +255,72 @@ public class FtpRequest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
+
 
 	}
 
+	public void processFEAT(Socket s, String st) throws IOException{
 
+		DataOutputStream dout=new DataOutputStream(s.getOutputStream());
+		dout.write(new String("500\n").getBytes());
+	}
+
+	public void processPWD(Socket s, String st) throws IOException{
+
+		DataOutputStream dout=new DataOutputStream(s.getOutputStream());
+		dout.write(new String("257 \""+this.currentLoc+"\"\n").getBytes());
+		dout.flush();
+	}
+
+
+
+	public void processCWD(Socket s, String file) throws IOException{
+		
+		if(file.equals("..")){
+			this.processCDUP(s, file);
+		}
+		else{
+			
+			String newPath;
+			if(file.charAt(0) =='/'){
+				 newPath = file.substring(1);
+			}
+			else{
+				newPath = this.currentLoc+="/"+file;
+			}
+
+			File repertoire = new File(newPath);
+			DataOutputStream dout=new DataOutputStream(s.getOutputStream());
+			if(repertoire.isDirectory()){
+				this.currentLoc=newPath;
+				dout.write(new String("250\n").getBytes());
+				dout.flush();
+			}else{
+				dout.write(new String("550\n").getBytes());
+				dout.flush();
+			}
+		}
+
+	}
+
+	public void processCDUP(Socket s, String file) throws IOException{
+		int end =this.currentLoc.lastIndexOf("/");
+
+		String newPath = (String) this.currentLoc.subSequence(0,end);
+
+
+
+		File repertoire = new File(newPath);
+		DataOutputStream dout=new DataOutputStream(s.getOutputStream());
+		if(repertoire.isDirectory()){
+			this.currentLoc=newPath;
+			dout.write(new String("250\n").getBytes());
+			dout.flush();
+		}else{
+			dout.write(new String("550\n").getBytes());
+			dout.flush();
+		}
+
+	}
 }

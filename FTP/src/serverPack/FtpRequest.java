@@ -116,7 +116,7 @@ public class FtpRequest {
 			DataOutputStream d = new DataOutputStream(socket.getOutputStream());
 
 			try{
-				FileInputStream br = new FileInputStream(new File("data/"+fichierdistant));
+				FileInputStream br = new FileInputStream(new File(this.currentLoc+"/"+fichierdistant));
 
 				byte [] buffer = new byte[s.getReceiveBufferSize()];
 				int nbOfbyte;
@@ -150,6 +150,49 @@ public class FtpRequest {
 
 
 	/**
+	 * Delete Fichier 
+	 * @param s
+	 * @param file
+	 */
+	public void processDELE(Socket s, String file){
+
+		
+			DataOutputStream dout;
+			try {
+				dout = new DataOutputStream(s.getOutputStream());
+	
+				File f =new File(this.currentLoc+"/"+file);
+				if(f.exists()){
+					if(f.isFile()){
+						f.delete();
+					
+						dout.write(new String("226\n").getBytes());
+					}else{
+						if(f.list().length>0){
+							/*folder not empty*/
+						
+							dout.write(new String("10066\n").getBytes());
+						}else{
+							f.delete();
+							
+							dout.write(new String("226\n").getBytes());
+						}
+					}
+					
+				
+				
+				}
+			
+				/* Erreur */
+				dout.write(new String("550\n").getBytes());
+			} catch (IOException e) {
+				/* Erreur */
+				System.err.println("OutputStreamfail : "+ e);
+			}
+
+	}
+	
+	/**
 	 * Fichier répertoire local dans répertoire distant
 	 * @param s
 	 * @param file
@@ -164,7 +207,7 @@ public class FtpRequest {
 			DataInputStream r = new DataInputStream(socket.getInputStream());
 
 			try{
-				FileOutputStream br = new FileOutputStream(new File("data/"+file));
+				FileOutputStream br = new FileOutputStream(new File(this.currentLoc+"/"+file));
 
 
 				byte [] buffer = new byte[s.getReceiveBufferSize()];
@@ -172,6 +215,7 @@ public class FtpRequest {
 				while((nbOfbyte = r.read(buffer))>0){
 					br.write(buffer,0,nbOfbyte);
 				}
+				
 				br.close();
 				/* Data connection open; no transfer in progress.*/
 				dout.write(new String("226\n").getBytes());
@@ -287,11 +331,12 @@ public class FtpRequest {
 				 newPath = file.substring(1);
 			}
 			else{
-				newPath = this.currentLoc+="/"+file;
+				newPath = this.currentLoc+"/"+file;
 			}
 
 			File repertoire = new File(newPath);
 			DataOutputStream dout=new DataOutputStream(s.getOutputStream());
+			System.out.println(repertoire);
 			if(repertoire.isDirectory()){
 				this.currentLoc=newPath;
 				dout.write(new String("250\n").getBytes());

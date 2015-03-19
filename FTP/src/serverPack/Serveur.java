@@ -24,7 +24,6 @@ public class Serveur {
 	
 
 	private static int port = 9999;
-	private static String RootFTP;
 	private static boolean boucle;
 	
 	/** 
